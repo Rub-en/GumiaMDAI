@@ -15,6 +15,7 @@ public class Receta {
     private String descripcion;
     private int tiempo;
     private int dificultad;
+    private String url;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id") // Asegúrate de que esta columna exista en la tabla 'receta'
