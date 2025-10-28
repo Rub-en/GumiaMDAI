@@ -14,6 +14,7 @@ public class Receta {
     private String descripcion;
     private int tiempo;
     private int dificultad;
+    private String url;
 
     @ManyToOne
     private Usuario usuario;

@@ -15,5 +15,3 @@ public class Ingrediente {
     @ManyToMany(mappedBy = "ingredientes")
     private List<Receta> recetas;
 }
-
-
