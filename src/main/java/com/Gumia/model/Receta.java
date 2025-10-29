@@ -1,10 +1,7 @@
-package com.gumia.model;
+package com.Gumia.model;
 
 import jakarta.persistence.*;
 import java.util.List;
-import com.gumia.model.Usuario;
-import com.gumia.model.Ingrediente;
-import com.gumia.model.Favorito;
 
 @Entity
 @Table(name = "receta")
@@ -35,6 +32,77 @@ public class Receta {
     @OneToMany(mappedBy = "receta")
     private List<Favorito> favoritos;
 
-    // Getters and Setters...
-    // (ya los tienes bien definidos)
+    // Getters y Setters
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public int getTiempo() {
+        return tiempo;
+    }
+
+    public void setTiempo(int tiempo) {
+        this.tiempo = tiempo;
+    }
+
+    public int getDificultad() {
+        return dificultad;
+    }
+
+    public void setDificultad(int dificultad) {
+        this.dificultad = dificultad;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public List<Ingrediente> getIngredientes() {
+        return ingredientes;
+    }
+
+    public void setIngredientes(List<Ingrediente> ingredientes) {
+        this.ingredientes = ingredientes;
+    }
+
+    public List<Favorito> getFavoritos() {
+        return favoritos;
+    }
+
+    public void setFavoritos(List<Favorito> favoritos) {
+        this.favoritos = favoritos;
+    }
 }
