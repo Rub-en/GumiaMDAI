@@ -1,4 +1,4 @@
-package com.gumia.model;
+package com.Gumia.model;
 
 import com.Gumia.model.Usuario;
 import jakarta.persistence.*;
@@ -19,7 +19,7 @@ public class Receta {
     private String url;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id") // Asegúrate de que esta columna exista en la tabla 'receta'
+    @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
     @ManyToMany
@@ -33,7 +33,7 @@ public class Receta {
     @OneToMany(mappedBy = "receta")
     private List<Favorito> favoritos;
 
-    // Getters and Setters
+    // Getters y Setters
 
     public Long getId() {
         return id;
@@ -73,6 +73,14 @@ public class Receta {
 
     public void setDificultad(int dificultad) {
         this.dificultad = dificultad;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public Usuario getUsuario() {
