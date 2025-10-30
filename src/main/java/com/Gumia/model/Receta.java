@@ -1,5 +1,6 @@
 package com.gumia.model;
 
+import com.Gumia.model.Usuario;
 import jakarta.persistence.*;
 import java.util.List;
 
