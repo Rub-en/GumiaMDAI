@@ -39,7 +39,7 @@ public class Receta {
             joinColumns = @JoinColumn(name = "receta_id"),
             inverseJoinColumns = @JoinColumn(name = "usuario_id")
     )
-    private List<Favorito> favoritos;
+    private List<Usuario> favoritos;
 
     //@OneToMany(mappedBy = "receta")
     //private List<Favorito> favoritos;
