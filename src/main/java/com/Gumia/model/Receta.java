@@ -26,12 +26,23 @@ public class Receta {
     @JoinTable(
             name = "receta_ingrediente",
             joinColumns = @JoinColumn(name = "receta_id"),
-            inverseJoinColumns = @JoinColumn(name = "ingrediente_id")
+            inverseJoinColumns = {
+                    @JoinColumn(name = "ingrediente_id"),
+                    @JoinColumn(name = "ingrediente_cantidad")
+            }
     )
     private List<Ingrediente> ingredientes;
 
-    @OneToMany(mappedBy = "receta")
+    @ManyToMany
+    @JoinTable(
+            name = "favoritos",
+            joinColumns = @JoinColumn(name = "receta_id"),
+            inverseJoinColumns = @JoinColumn(name = "usuario_id")
+    )
     private List<Favorito> favoritos;
+
+    //@OneToMany(mappedBy = "receta")
+    //private List<Favorito> favoritos;
 
     // Getters y Setters
 
