@@ -110,11 +110,11 @@ public class Receta {
         this.ingredientes = ingredientes;
     }
 
-    public List<Favorito> getFavoritos() {
+    /*public List<Favorito> getFavoritos() {
         return favoritos;
     }
 
     public void setFavoritos(List<Favorito> favoritos) {
         this.favoritos = favoritos;
-    }
+    }*/
 }

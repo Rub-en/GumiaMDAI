@@ -46,11 +46,11 @@ public class Usuario {
         this.recetas = recetas;
     }
 
-    public List<Favorito> getFavoritos() {
+    /*public List<Favorito> getFavoritos() {
         return favoritos;
     }
 
     public void setFavoritos(List<Favorito> favoritos) {
         this.favoritos = favoritos;
-    }
+    }*/
 }
