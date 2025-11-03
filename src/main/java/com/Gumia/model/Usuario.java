@@ -15,8 +15,8 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario")
     private List<Receta> recetas;
 
-    @OneToMany(mappedBy = "usuario")
-    private List<Receta> favoritos;
+    /*@OneToMany(mappedBy = "usuario")
+    private List<Receta> favoritos;*/
 
     @ManyToMany
     private List<Favorito> recetasQueLesGusta;
