@@ -11,6 +11,7 @@ public class Ingrediente {
     private Long id;
 
     private String nombre;
+    private float cantidad;
 
     @ManyToMany(mappedBy = "ingredientes")
     private List<Receta> recetas;
@@ -31,6 +32,14 @@ public class Ingrediente {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public float getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(float cantidad) {
+        this.cantidad = cantidad;
     }
 
     public List<Receta> getRecetas() {

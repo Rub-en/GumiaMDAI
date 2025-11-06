@@ -27,8 +27,8 @@ public class Receta {
             name = "receta_ingrediente",
             joinColumns = @JoinColumn(name = "receta_id"),
             inverseJoinColumns = {
-                    @JoinColumn(name = "ingrediente_id"),
-                    @JoinColumn(name = "ingrediente_cantidad")
+                    @JoinColumn(name = "ingrediente_id", referencedColumnName = "id"),
+                    @JoinColumn(name = "ingrediente_cantidad", referencedColumnName = "cantidad")
             }
     )
     private List<Ingrediente> ingredientes;
