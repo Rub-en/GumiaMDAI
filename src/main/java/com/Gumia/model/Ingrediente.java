@@ -5,7 +5,6 @@ import java.util.List;
 
 @Entity
 public class Ingrediente {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -13,8 +12,9 @@ public class Ingrediente {
     private String nombre;
     private float cantidad;
 
-    @ManyToMany(mappedBy = "ingredientes")
-    private List<Receta> recetas;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "receta_id")
+    private Receta receta;
 
     // Getters y Setters
 
@@ -40,13 +40,5 @@ public class Ingrediente {
 
     public void setCantidad(float cantidad) {
         this.cantidad = cantidad;
-    }
-
-    public List<Receta> getRecetas() {
-        return recetas;
-    }
-
-    public void setRecetas(List<Receta> recetas) {
-        this.recetas = recetas;
     }
 }

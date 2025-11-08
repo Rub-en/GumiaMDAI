@@ -18,8 +18,8 @@ public class Usuario {
     /*@OneToMany(mappedBy = "usuario")
     private List<Receta> favoritos;*/
 
-    @ManyToMany
-    private List<Favorito> recetasQueLesGusta;
+    //@ManyToMany
+    //private List<Receta> recetasQueLesGusta;
     // Getters y Setters
 
     public Long getId() {
