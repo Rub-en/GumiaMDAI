@@ -12,7 +12,7 @@ public class Ingrediente {
     private String nombre;
     private float cantidad;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY) //Esto sirve para que no se inicialice hasta que haga falta. Nos lo dio DeepSeek y pareció útil, ya que habrá muchas tablas de estas
     @JoinColumn(name = "receta_id")
     private Receta receta;
 
