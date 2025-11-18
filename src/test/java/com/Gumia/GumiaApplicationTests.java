@@ -1,13 +1,17 @@
 package com.Gumia;
 
+import com.Gumia.model.Usuario;
+import com.Gumia.model.Receta;
+import com.Gumia.model.Ingrediente;
+import com.Gumia.repositories.UsuarioRepository;
+import com.Gumia.repositories.RecetaRepository;
+import com.Gumia.repositories.IngredienteRepository;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,128 +19,172 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class GumiaApplicationTests {
 
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private RecetaRepository recetaRepository;
+
+    @Autowired
+    private IngredienteRepository ingredienteRepository;
+
+    private Usuario usuario;
+
     @BeforeEach
     void setUp() {
-        // Insertar 100 usuarios usando batch para evitar múltiples sentencias en un solo string
-        List<Object[]> usuarios = new ArrayList<>();
-        for (int i = 1; i <= 100; i++) {
-            usuarios.add(new Object[]{ "usuario" + i });
-        }
-        jdbcTemplate.batchUpdate("INSERT INTO usuario (nombre) VALUES (?)", usuarios);
+        // Crear un usuario inicial para usar en los tests
+        usuario = new Usuario();
+        usuario.setNombre("Marina");
+        usuario.setEmail("marina@example.com");
+        usuario.setContrasenia("1234");
+        usuario = usuarioRepository.save(usuario);
+    }
 
-        // Insertar 10 recetas
-        List<Object[]> recetas = Arrays.asList(
-                new Object[]{ "receta1", "Descripción de la receta 1", 30, 2, "http://example.com/receta1", 1 },
-                new Object[]{ "receta2", "Descripción de la receta 2", 30, 2, "http://example.com/receta2", 1 },
-                new Object[]{ "receta3", "Descripción de la receta 3", 30, 2, "http://example.com/receta3", 1 },
-                new Object[]{ "receta4", "Descripción de la receta 4", 30, 2, "http://example.com/receta4", 1 },
-                new Object[]{ "receta5", "Descripción de la receta 5", 30, 2, "http://example.com/receta5", 1 },
-                new Object[]{ "macarrones", "Descripción de la receta 6", 30, 2, "http://example.com/receta6", 1 },
-                new Object[]{ "receta7", "Descripción de la receta 7", 30, 2, "http://example.com/receta7", 1 },
-                new Object[]{ "receta8", "Descripción de la receta 8", 30, 2, "http://example.com/receta8", 1 },
-                new Object[]{ "receta9", "Descripción de la receta 9", 30, 2, "http://example.com/receta9", 1 },
-                new Object[]{ "receta10", "Descripción de la receta 10", 30, 2, "http://example.com/receta10", 1 }
-        );
-        jdbcTemplate.batchUpdate(
-                "INSERT INTO receta (titulo, descripcion, tiempo, dificultad, url, usuario_id) VALUES (?, ?, ?, ?, ?, ?)",
-                recetas
-        );
-
-        // Insertar ingredientes
-        List<Object[]> ingredientes = Arrays.asList(
-                new Object[]{ "patata", 4, 2 },
-                new Object[]{ "guisante", 5, 3 },
-                new Object[]{ "pepino", 2, 4 },
-                new Object[]{ "espagetti", 1, 4 },
-                new Object[]{ "pasta", 3, 4 },
-                new Object[]{ "ingrediente6", 3, 1 },
-                new Object[]{ "ingrediente7", 3, 1 },
-                new Object[]{ "ingrediente8", 3, 1 },
-                new Object[]{ "ingrediente9", 3, 4 },
-                new Object[]{ "ingrediente10", 3, 4 }
-        );
-        jdbcTemplate.batchUpdate("INSERT INTO ingrediente (nombre, cantidad, receta_id) VALUES (?, ?, ?)", ingredientes);
-
-        // Insertar relaciones receta_ingrediente
-        List<Object[]> recetaIngrediente = Arrays.asList(
-                new Object[]{ 1, 4, 1 },
-                new Object[]{ 1, 4, 2 },
-                new Object[]{ 1, 4, 3 },
-                new Object[]{ 1, 4, 4 },
-                new Object[]{ 1, 4, 5 }
-        );
-        jdbcTemplate.batchUpdate(
-                "INSERT INTO receta_ingrediente (receta_id, ingrediente_cantidad, ingrediente_id) VALUES (?, ?, ?)",
-                recetaIngrediente
-        );
-
-        // Insertar favoritos
-        List<Object[]> favoritos = Arrays.asList(
-                new Object[]{ 1, 1 },
-                new Object[]{ 3, 1 },
-                new Object[]{ 5, 1 },
-                new Object[]{ 2, 2 },
-                new Object[]{ 4, 2 }
-        );
-        jdbcTemplate.batchUpdate("INSERT INTO favoritos (receta_id, usuario_id) VALUES (?, ?)", favoritos);
+    // --- TESTS DE USUARIO ---
+    @Test
+    void crearUsuario() {
+        // Comprobar que el usuario se ha guardado correctamente en la base de datos
+        assertTrue(usuarioRepository.existsByEmail("marina@example.com"));
     }
 
     @Test
-    void alMenosUno() {
-        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM usuario", Integer.class);
-        assertTrue(count >=1, "Debe haber al menos 1 usuarios (setup)");
+    void evitarDuplicadosPorEmail() {
+        // Intentar guardar otro usuario con el mismo email debe lanzar una excepción
+        Usuario duplicado = new Usuario();
+        duplicado.setNombre("Otra Marina");
+        duplicado.setEmail("marina@example.com");
+        duplicado.setContrasenia("abcd");
+        assertThrows(Exception.class, () -> usuarioRepository.saveAndFlush(duplicado));
     }
 
     @Test
-    void alMenosUnIngrediente() {
-        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM ingrediente", Integer.class);
-        assertTrue(count >=1, "Debe haber al menos 1 ingrediente (setup)");
+    void editarPerfilUsuario() {
+        // Actualizar el nombre del usuario y comprobar que se guarda correctamente
+        usuario.setNombre("Marina Actualizada");
+        usuarioRepository.save(usuario);
+        Usuario actualizado = usuarioRepository.findByEmail("marina@example.com");
+        assertEquals("Marina Actualizada", actualizado.getNombre());
     }
 
     @Test
-    void alMenosUnaReceta() {
-        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM receta", Integer.class);
-        assertTrue(count >=1, "Debe haber al menos 1 receta (setup)");
+    void eliminarUsuario() {
+        // Eliminar el usuario y comprobar que ya no existe en la base de datos
+        usuarioRepository.delete(usuario);
+        assertFalse(usuarioRepository.existsByEmail("marina@example.com"));
+    }
+
+    // --- TESTS DE RECETA ---
+    @Test
+    void crearRecetaConIngredientes() {
+        // Crear una receta con dos ingredientes y comprobar que se guardan correctamente
+        Receta receta = new Receta();
+        receta.setTitulo("Tarta sin gluten");
+        receta.setDescripcion("Deliciosa tarta");
+        receta.setTiempoPreparacion(60);
+        receta.setDificultad("Media");
+        receta.setCategoria("Postre");
+        receta.setAutor(usuario);
+
+        Ingrediente ing1 = new Ingrediente();
+        ing1.setNombre("Harina de arroz");
+        ing1.setCantidad("200g");
+        ing1.setReceta(receta);
+
+        Ingrediente ing2 = new Ingrediente();
+        ing2.setNombre("Huevos");
+        ing2.setCantidad("3");
+        ing2.setReceta(receta);
+
+        receta.setIngredientes(List.of(ing1, ing2));
+        recetaRepository.save(receta);
+
+        Receta guardada = recetaRepository.findByTitulo("Tarta sin gluten").getFirst();
+        assertEquals(2, guardada.getIngredientes().size());
     }
 
     @Test
-    void hayMacarrones() {
-        String titulo = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM receta WHERE titulo = ?",
-                String.class, "macarrones"
-        );
-        assertNotNull(titulo);
+    void buscarRecetaPorCategoria() {
+        // Guardar una receta en la categoría "Pasta" y comprobar que se puede buscar por categoría
+        Receta receta = new Receta();
+        receta.setTitulo("Pizza sin gluten");
+        receta.setCategoria("Pasta");
+        receta.setAutor(usuario);
+        recetaRepository.save(receta);
+
+        List<Receta> recetas = recetaRepository.findByCategoria("Pasta");
+        assertFalse(recetas.isEmpty());
     }
 
     @Test
-    void hayUsuario1() {
-        String titulo = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM usuario WHERE nombre = ?",
-                String.class, "usuario1"
-        );
-        assertNotNull(titulo);
+    void buscarRecetaPorTituloParcial() {
+        // Guardar una receta y comprobar que se puede buscar por parte del título ignorando mayúsculas
+        Receta receta = new Receta();
+        receta.setTitulo("Bizcocho sin gluten");
+        receta.setAutor(usuario);
+        recetaRepository.save(receta);
+
+        List<Receta> recetas = recetaRepository.findByTituloContainingIgnoreCase("bizcocho");
+        assertEquals(1, recetas.size());
+    }
+
+    // --- TESTS DE FAVORITOS ---
+    @Test
+    void marcarRecetaComoFavorita() {
+        // Comprobar que un usuario puede marcar una receta como favorita
+        Receta receta = new Receta();
+        receta.setTitulo("Macarrones sin gluten");
+        receta.setAutor(usuario);
+        recetaRepository.save(receta);
+
+        usuario.getRecetasFavoritas().add(receta);
+        usuarioRepository.save(usuario);
+
+        Usuario u = usuarioRepository.findByEmail("marina@example.com");
+        assertEquals(1, u.getRecetasFavoritas().size());
     }
 
     @Test
-    void hayPatata() {
-        String titulo = jdbcTemplate.queryForObject(
-                "SELECT r.titulo FROM receta r JOIN ingrediente i ON i.receta_id = r.id WHERE i.nombre = ? LIMIT 1",
-                String.class, "patata"
-        );
-        assertNotNull(titulo);
+    void recetaFavoritaDeVariosUsuarios() {
+        // Comprobar que una receta puede ser favorita de varios usuarios
+        Receta receta = new Receta();
+        receta.setTitulo("Paella sin gluten");
+        receta.setAutor(usuario);
+        recetaRepository.save(receta);
+
+        Usuario otro = new Usuario();
+        otro.setNombre("Pedro");
+        otro.setEmail("pedro@example.com");
+        otro.setContrasenia("1234");
+        otro.getRecetasFavoritas().add(receta);
+        usuarioRepository.save(otro);
+
+        Receta r = recetaRepository.findByTitulo("Paella sin gluten").getFirst();
+        assertEquals(2, r.getUsuariosFavorito().size());
     }
 
+    // --- TEST FUNCIONAL COMPLETO ---
     @Test
-    void receta1Cantidades4() {
-        Integer distintos = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM receta_ingrediente WHERE receta_id = ? AND ingrediente_cantidad <> ?",
-                Integer.class, 1, 4
-        );
-        assertNotNull(distintos);
-        assertEquals(0, distintos.intValue(), "Todas las relaciones de receta_ingrediente para receta 1 deben tener ingrediente_cantidad = 4");
+    void flujoCompletoUsuarioRecetaFavoritos() {
+        // Flujo completo: usuario crea receta, añade ingrediente, la marca como favorita y luego la elimina
+        Receta receta = new Receta();
+        receta.setTitulo("Brownie sin gluten");
+        receta.setAutor(usuario);
+
+        Ingrediente ing = new Ingrediente();
+        ing.setNombre("Chocolate");
+        ing.setCantidad("100g");
+        ing.setReceta(receta);
+
+        receta.setIngredientes(List.of(ing));
+        recetaRepository.save(receta);
+
+        usuario.getRecetasFavoritas().add(receta);
+        usuarioRepository.save(usuario);
+
+        Usuario u = usuarioRepository.findByEmail("marina@example.com");
+        assertEquals("Brownie sin gluten", u.getRecetasFavoritas().getFirst().getTitulo());
+
+        recetaRepository.delete(receta);
+        assertTrue(recetaRepository.findByTitulo("Brownie sin gluten").isEmpty());
     }
-
-
-        @Autowired
-        private JdbcTemplate jdbcTemplate;
 }

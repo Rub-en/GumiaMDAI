@@ -4,53 +4,49 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(name = "usuario")
 public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String nombre;
 
-    @OneToMany(mappedBy = "usuario")
-    private List<Receta> recetas;
+    @Column(nullable = false, unique = true)
+    private String email;
 
-    /*@OneToMany(mappedBy = "usuario")
-    private List<Receta> favoritos;*/
+    @Column(nullable = false)
+    private String contrasenia; // antes "contraseña"
 
-    //@ManyToMany
-    //private List<Receta> recetasQueLesGusta;
+    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Receta> recetasPublicadas;
+
+    @ManyToMany
+    @JoinTable(
+            name = "favoritos",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "receta_id")
+    )
+    private List<Receta> recetasFavoritas;
+
     // Getters y Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public Long getId() {
-        return id;
-    }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public String getNombre() {
-        return nombre;
-    }
+    public String getContrasenia() { return contrasenia; }
+    public void setContrasenia(String contrasenia) { this.contrasenia = contrasenia; }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+    public List<Receta> getRecetasPublicadas() { return recetasPublicadas; }
+    public void setRecetasPublicadas(List<Receta> recetasPublicadas) { this.recetasPublicadas = recetasPublicadas; }
 
-    public List<Receta> getRecetas() {
-        return recetas;
-    }
-
-    public void setRecetas(List<Receta> recetas) {
-        this.recetas = recetas;
-    }
-
-    /*public List<Favorito> getFavoritos() {
-        return favoritos;
-    }
-
-    public void setFavoritos(List<Favorito> favoritos) {
-        this.favoritos = favoritos;
-    }*/
+    public List<Receta> getRecetasFavoritas() { return recetasFavoritas; }
+    public void setRecetasFavoritas(List<Receta> recetasFavoritas) { this.recetasFavoritas = recetasFavoritas; }
 }
