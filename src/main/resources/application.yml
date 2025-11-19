@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: gumia
+  profiles:
+    active: h2   # por defecto usamos H2 en desarrollo

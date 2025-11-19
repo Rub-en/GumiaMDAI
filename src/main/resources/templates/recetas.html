@@ -1,7 +1,18 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head><title>Recetas</title></head>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de recetas</title>
+</head>
 <body>
-<h1>Listado de recetas</h1>
+<h1>Recetas</h1>
+<ul>
+    <li th:each="receta : ${recetas}">
+        <strong th:text="${receta.titulo}">Titulo</strong> -
+        <span th:text="${receta.descripcion}">Descripcion</span> -
+        <em th:text="${receta.autor.nombre}">Autor</em>
+    </li>
+</ul>
+<a href="/recetas/nueva">Crear nueva receta</a>
 </body>
 </html>

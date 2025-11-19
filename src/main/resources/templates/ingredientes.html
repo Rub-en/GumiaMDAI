@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de ingredientes</title>
+</head>
+<body>
+<h1>Ingredientes</h1>
+<ul>
+    <li th:each="ingrediente : ${ingredientes}">
+        <strong th:text="${ingrediente.nombre}">Nombre</strong> -
+        <span th:text="${ingrediente.cantidad}">Cantidad</span> -
+        <em th:text="${ingrediente.receta.titulo}">Receta</em>
+    </li>
+</ul>
+<a href="/ingredientes/nuevo">Crear nuevo ingrediente</a>
+</body>
+</html>

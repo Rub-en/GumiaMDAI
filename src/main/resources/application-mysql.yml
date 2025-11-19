@@ -1,0 +1,17 @@
+spring:
+  profiles:
+    active: mysql
+  datasource:
+    url: jdbc:mysql://localhost:3306/gumia?useSSL=false&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: gumia_user
+    password: gumia_pass
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+server:
+  port: 8080

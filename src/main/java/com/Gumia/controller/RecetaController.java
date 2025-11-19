@@ -2,65 +2,39 @@ package com.Gumia.controller;
 
 import com.Gumia.model.Receta;
 import com.Gumia.service.RecetaService;
+import com.Gumia.repositories.UsuarioRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/recetas")
 public class RecetaController {
 
     private final RecetaService recetaService;
+    private final UsuarioRepository usuarioRepository;
 
-    public RecetaController(RecetaService recetaService) {
+    public RecetaController(RecetaService recetaService, UsuarioRepository usuarioRepository) {
         this.recetaService = recetaService;
+        this.usuarioRepository = usuarioRepository;
     }
 
     @GetMapping
     public String listarRecetas(Model model) {
-        List<Receta> recetas = recetaService.listarRecetas();
-        model.addAttribute("recetas", recetas);
-        return "recetas"; // templates/recetas.html
+        model.addAttribute("recetas", recetaService.listarTodas());
+        return "recetas";
     }
 
     @GetMapping("/nueva")
     public String mostrarFormulario(Model model) {
         model.addAttribute("receta", new Receta());
-        return "receta-form"; // templates/receta-form.html
+        model.addAttribute("usuarios", usuarioRepository.findAll());
+        return "form_receta";
     }
 
-    @GetMapping("/{id}/editar")
-    public String mostrarFormularioEdicion(@PathVariable Long id, Model model) {
-        Receta receta = recetaService.buscarPorId(id);
-        model.addAttribute("receta", receta);
-        return "receta-form"; // templates/receta-form.html
-    }
-
-    @PostMapping
-    public String guardarOEditarReceta(@ModelAttribute Receta receta) {
-        // Se usa el valor retornado para evitar advertencias
-        Receta recetaGuardada = (receta.getId() != null)
-                ? recetaService.editarReceta(receta)
-                : recetaService.crearReceta(receta);
-
-        // Si algún día quieres redirigir con el ID:
-        // return "redirect:/recetas/" + recetaGuardada.getId();
-
-        return "redirect:/recetas";
-    }
-
-    @GetMapping("/{id}")
-    public String verDetalle(@PathVariable Long id, Model model) {
-        Receta receta = recetaService.buscarPorId(id);
-        model.addAttribute("receta", receta);
-        return "receta-detalle"; // templates/receta-detalle.html
-    }
-
-    @PostMapping("/{id}/eliminar")
-    public String eliminarReceta(@PathVariable Long id) {
-        recetaService.eliminarReceta(id);
+    @PostMapping("/guardar")
+    public String guardarReceta(@ModelAttribute Receta receta) {
+        recetaService.guardar(receta);
         return "redirect:/recetas";
     }
 }

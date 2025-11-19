@@ -1,10 +1,10 @@
 package com.Gumia.model;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "receta")
 public class Receta {
 
     @Id
@@ -13,66 +13,90 @@ public class Receta {
 
     private String titulo;
     private String descripcion;
-    private int tiempoPreparacion;
-    private String dificultad;
-    private String categoria;
-    private String imagen;
-    private int puntuacion;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario autor;
 
     @OneToMany(mappedBy = "receta", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Ingrediente> ingredientes;
+    private List<Ingrediente> ingredientes = new ArrayList<>();
 
-    @ElementCollection
-    @CollectionTable(name = "receta_pasos", joinColumns = @JoinColumn(name = "receta_id"))
-    @Column(name = "paso")
-    private List<String> pasos;
+    // Empty constructor
+    public Receta() {
+    }
 
-    @ManyToMany
-    @JoinTable(
-            name = "favoritos",
-            joinColumns = @JoinColumn(name = "receta_id"),
-            inverseJoinColumns = @JoinColumn(name = "usuario_id")
-    )
-    private List<Usuario> usuariosFavorito;
+    // Full constructor
+    public Receta(Long id, String titulo, String descripcion, Usuario autor, List<Ingrediente> ingredientes) {
+        this.id = id;
+        this.titulo = titulo;
+        this.descripcion = descripcion;
+        this.autor = autor;
+        this.ingredientes = ingredientes;
+    }
 
-    // Getters y Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    // Constructor without id
+    public Receta(String titulo, String descripcion, Usuario autor, List<Ingrediente> ingredientes) {
+        this.titulo = titulo;
+        this.descripcion = descripcion;
+        this.autor = autor;
+        this.ingredientes = ingredientes;
+    }
 
-    public String getTitulo() { return titulo; }
-    public void setTitulo(String titulo) { this.titulo = titulo; }
+    // Constructor without ingredient list
+    public Receta(String titulo, String descripcion, Usuario autor) {
+        this.titulo = titulo;
+        this.descripcion = descripcion;
+        this.autor = autor;
+    }
 
-    public String getDescripcion() { return descripcion; }
-    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+    // Getters and setters
+    public Long getId() {
+        return id;
+    }
 
-    public int getTiempoPreparacion() { return tiempoPreparacion; }
-    public void setTiempoPreparacion(int tiempoPreparacion) { this.tiempoPreparacion = tiempoPreparacion; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getDificultad() { return dificultad; }
-    public void setDificultad(String dificultad) { this.dificultad = dificultad; }
+    public String getTitulo() {
+        return titulo;
+    }
 
-    public String getCategoria() { return categoria; }
-    public void setCategoria(String categoria) { this.categoria = categoria; }
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
 
-    public String getImagen() { return imagen; }
-    public void setImagen(String imagen) { this.imagen = imagen; }
+    public String getDescripcion() {
+        return descripcion;
+    }
 
-    public int getPuntuacion() { return puntuacion; }
-    public void setPuntuacion(int puntuacion) { this.puntuacion = puntuacion; }
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 
-    public Usuario getAutor() { return autor; }
-    public void setAutor(Usuario autor) { this.autor = autor; }
+    public Usuario getAutor() {
+        return autor;
+    }
 
-    public List<Ingrediente> getIngredientes() { return ingredientes; }
-    public void setIngredientes(List<Ingrediente> ingredientes) { this.ingredientes = ingredientes; }
+    public void setAutor(Usuario autor) {
+        this.autor = autor;
+    }
 
-    public List<String> getPasos() { return pasos; }
-    public void setPasos(List<String> pasos) { this.pasos = pasos; }
+    public List<Ingrediente> getIngredientes() {
+        return ingredientes;
+    }
 
-    public List<Usuario> getUsuariosFavorito() { return usuariosFavorito; }
-    public void setUsuariosFavorito(List<Usuario> usuariosFavorito) { this.usuariosFavorito = usuariosFavorito; }
+    public void setIngredientes(List<Ingrediente> ingredientes) {
+        this.ingredientes = ingredientes;
+    }
+
+    // Helper methods
+    public void addIngrediente(Ingrediente ingrediente) {
+        ingredientes.add(ingrediente);
+        ingrediente.setReceta(this);
+    }
+
+    public void removeIngrediente(Ingrediente ingrediente) {
+        ingredientes.remove(ingrediente);
+        ingrediente.setReceta(null);
+    }
 }

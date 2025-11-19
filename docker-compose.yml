@@ -1,0 +1,16 @@
+services:
+  mysql:
+    image: mysql:8
+    container_name: gumia-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: gumia
+      MYSQL_USER: gumia_user
+      MYSQL_PASSWORD: gumia_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario de receta</title>
+</head>
+<body>
+<h1>Crear receta</h1>
+<form th:action="@{/recetas/guardar}" th:object="${receta}" method="post">
+    <label for="titulo">Titulo:</label>
+    <input type="text" th:field="*{titulo}" id="titulo" /><br/>
+
+    <label for="descripcion">Descripcion:</label>
+    <textarea th:field="*{descripcion}" id="descripcion"></textarea><br/>
+
+    <label for="autor">Autor:</label>
+    <select th:field="*{autor}" id="autor">
+        <option th:each="usuario : ${usuarios}" th:value="${usuario}" th:text="${usuario.nombre}"></option>
+    </select><br/>
+
+    <button type="submit">Guardar</button>
+</form>
+</body>
+</html>
