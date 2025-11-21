@@ -1,7 +1,11 @@
 package com.Gumia.repositories;
 
 import com.Gumia.model.Usuario;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UsuarioRepository extends CrudRepository<Usuario, Long> {
+import java.util.Optional;
+
+public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
+    Optional<Usuario> findByEmail(String email);
+    Optional<Usuario> findByUsername(String nombre);
 }

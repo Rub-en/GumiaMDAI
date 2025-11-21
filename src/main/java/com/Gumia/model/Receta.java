@@ -13,39 +13,67 @@ public class Receta {
 
     private String titulo;
     private String descripcion;
+    private String url;
+    private int dificultad;
+    private int tiempo;
 
     @ManyToOne
     private Usuario autor;
 
-    @OneToMany(mappedBy = "receta", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Ingrediente> ingredientes = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(
+            name = "receta_ingrediente",
+            joinColumns = @JoinColumn(name = "receta_id"),
+            inverseJoinColumns = {
+                    @JoinColumn(name = "ingrediente_id", referencedColumnName = "id"),
+                    @JoinColumn(name = "ingrediente_cantidad", referencedColumnName = "cantidad")
+            }
+    )
+    private List<Ingrediente> ingredientes;
+
+    @ManyToMany
+    @JoinTable(
+            name = "favoritos",
+            joinColumns = @JoinColumn(name = "receta_id"),
+            inverseJoinColumns = @JoinColumn(name = "usuario_id")
+    )
+    private List<Usuario> favoritos;
 
     // Empty constructor
     public Receta() {
     }
 
     // Full constructor
-    public Receta(Long id, String titulo, String descripcion, Usuario autor, List<Ingrediente> ingredientes) {
+    public Receta(Long id, String titulo, String descripcion, Usuario autor, List<Ingrediente> ingredientes, String url, int dificultad, int tiempo) {
         this.id = id;
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.autor = autor;
         this.ingredientes = ingredientes;
+        this.url=url;
+        this.dificultad=dificultad;
+        this.tiempo=tiempo;
     }
 
     // Constructor without id
-    public Receta(String titulo, String descripcion, Usuario autor, List<Ingrediente> ingredientes) {
+    public Receta(String titulo, String descripcion, Usuario autor, List<Ingrediente> ingredientes, String url, int dificultad, int tiempo) {
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.autor = autor;
         this.ingredientes = ingredientes;
+        this.url=url;
+        this.dificultad=dificultad;
+        this.tiempo=tiempo;
     }
 
     // Constructor without ingredient list
-    public Receta(String titulo, String descripcion, Usuario autor) {
+    public Receta(String titulo, String descripcion, Usuario autor, String url, int dificultad, int tiempo) {
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.autor = autor;
+        this.url=url;
+        this.dificultad=dificultad;
+        this.tiempo=tiempo;
     }
 
     // Getters and setters
@@ -87,6 +115,30 @@ public class Receta {
 
     public void setIngredientes(List<Ingrediente> ingredientes) {
         this.ingredientes = ingredientes;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public int getDificultad() {
+        return dificultad;
+    }
+
+    public void setDificultad(int dificultad) {
+        this.dificultad = dificultad;
+    }
+
+    public int getTiempo() {
+        return tiempo;
+    }
+
+    public void setTiempo(int tiempo) {
+        this.tiempo = tiempo;
     }
 
     // Helper methods

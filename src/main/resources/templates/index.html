@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Recetas - Index</title>
+    <style>
+        :root{
+            --header-height:64px;
+            --center-width:640px;
+            --card-gap:12px;
+            --card-padding:12px;
+            --img-size:96px;
+            --bg:#f6f7f9;
+            --card-bg:#ffffff;
+            --accent:#2b7cff;
+            --text:#222;
+        }
+        *{box-sizing:border-box}
+        html,body{height:100%}
+        body{
+            margin:0;
+            font-family:Inter, Roboto, Arial, sans-serif;
+            background:var(--bg);
+            color:var(--text);
+        }
+
+        /* Header */
+        header{
+            height:var(--header-height);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            position:sticky;
+            top:0;
+            background:linear-gradient(0deg, rgba(255,255,255,0.85), rgba(255,255,255,0.85));
+            z-index:10;
+            padding:0 16px;
+            border-bottom:1px solid #e6e9ee;
+        }
+        .header-inner{
+            width:100%;
+            max-width:1200px;
+            display:flex;
+            align-items:center;
+            gap:12px;
+        }
+        .search-wrap{
+            margin:0 auto;
+            display:flex;
+            justify-content:center;
+            flex:1;
+        }
+        .search{
+            width:60%;
+            max-width:520px;
+            min-width:220px;
+            display:flex;
+            align-items:center;
+            gap:8px;
+            background:#fff;
+            border:1px solid #ddd;
+            border-radius:24px;
+            padding:6px 12px;
+            box-shadow:0 1px 3px rgba(0,0,0,0.03);
+        }
+        .search input{
+            border:0;
+            outline:0;
+            flex:1;
+            font-size:14px;
+            background:transparent;
+            padding:6px 4px;
+        }
+        .login-btn{
+            margin-left:auto;
+            background:transparent;
+            border:1px solid var(--accent);
+            color:var(--accent);
+            padding:8px 14px;
+            border-radius:6px;
+            cursor:pointer;
+            font-weight:600;
+        }
+
+        /* Main layout */
+        main{
+            min-height:calc(100vh - var(--header-height));
+            display:flex;
+            align-items:flex-start;
+            justify-content:center;
+            padding:24px 16px;
+        }
+        .center-col{
+            width:100%;
+            max-width:var(--center-width);
+            display:flex;
+            flex-direction:column;
+            gap:var(--card-gap);
+            align-items:stretch;
+            padding-bottom:24px;
+            min-height:100%;
+        }
+
+        /* Recipe card */
+        .recipe-card{
+            display:flex;
+            gap:12px;
+            background:var(--card-bg);
+            border-radius:10px;
+            padding:var(--card-padding);
+            align-items:flex-start;
+            box-shadow:0 6px 18px rgba(20,30,50,0.04);
+            border:1px solid #eef2f6;
+        }
+        .recipe-card img{
+            width:var(--img-size);
+            height:var(--img-size);
+            object-fit:cover;
+            border-radius:8px;
+            flex:0 0 var(--img-size);
+            background:#eee;
+        }
+        .recipe-info{
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+        }
+        .recipe-title{
+            margin:0;
+            font-size:18px;
+            font-weight:700;
+        }
+        .recipe-diff{
+            margin:6px 0 0 0;
+            font-size:14px;
+            color:#666;
+        }
+
+        /* Ensure five items fill vertical space nicely on large screens */
+        @media(min-height:900px){
+            .center-col{justify-content:center}
+            .recipe-card{padding:16px}
+        }
+
+        @media(max-width:640px){
+            .search{width:80%}
+            .recipe-card{gap:10px}
+            .recipe-info .recipe-title{font-size:16px}
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="header-inner">
+        <div class="search-wrap">
+            <form class="search" th:action="@{/buscar}" method="get">
+                <input type="search" name="q" placeholder="Buscar recetas..." />
+                <button type="submit" style="background:var(--accent);color:#fff;border:0;padding:6px 10px;border-radius:6px;cursor:pointer">Buscar</button>
+            </form>
+        </div>
+
+        <a class="login-btn" th:href="@{/login}">Iniciar sesión</a>
+    </div>
+</header>
+
+<main>
+    <div class="center-col">
+        <!-- Itera sobre tu lista de recetas y muestra hasta 5 -->
+        <div class="recipe-card" th:each="receta,stat : ${recetas}" th:if="${stat.index} &lt; 5">
+            <img th:src="${receta.url}" th:alt="${receta.titulo}" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Crect width='100%25' height='100%25' fill='%23ddd'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23888' font-size='12'%3EImagen%3C/text%3E%3C/svg%3E" />
+            <div class="recipe-info">
+                <h3 class="recipe-title" th:text="${receta.titulo}">Título de ejemplo</h3>
+                <p class="recipe-diff">Dificultad: <span th:text="${receta.dificultad}">3</span></p>
+            </div>
+        </div>
+
+        <!-- Si no usas Thymeleaf, puedes copiar 5 bloques como el siguiente y cambiar src/título/dificultad -->
+        <!--
+        <div class="recipe-card">
+          <img src="https://via.placeholder.com/96" alt="Ejemplo" />
+          <div class="recipe-info">
+            <h3 class="recipe-title">Tarta de manzana</h3>
+            <p class="recipe-diff">Dificultad: 2</p>
+          </div>
+        </div>
+        -->
+    </div>
+</main>
+</body>
+</html>
