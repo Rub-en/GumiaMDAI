@@ -3,189 +3,155 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Recetas - Index</title>
+    <title>Inicio - Recetas</title>
     <style>
-        :root{
-            --header-height:64px;
-            --center-width:640px;
-            --card-gap:12px;
-            --card-padding:12px;
-            --img-size:96px;
-            --bg:#f6f7f9;
-            --card-bg:#ffffff;
-            --accent:#2b7cff;
-            --text:#222;
-        }
-        *{box-sizing:border-box}
-        html,body{height:100%}
-        body{
-            margin:0;
-            font-family:Inter, Roboto, Arial, sans-serif;
-            background:var(--bg);
-            color:var(--text);
-        }
-
-        /* Header */
-        header{
-            height:var(--header-height);
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            position:sticky;
-            top:0;
-            background:linear-gradient(0deg, rgba(255,255,255,0.85), rgba(255,255,255,0.85));
-            z-index:10;
-            padding:0 16px;
-            border-bottom:1px solid #e6e9ee;
-        }
-        .header-inner{
-            width:100%;
-            max-width:1200px;
-            display:flex;
-            align-items:center;
-            gap:12px;
-        }
-        .search-wrap{
-            margin:0 auto;
-            display:flex;
-            justify-content:center;
-            flex:1;
-        }
-        .search{
-            width:60%;
-            max-width:520px;
-            min-width:220px;
-            display:flex;
-            align-items:center;
-            gap:8px;
-            background:#fff;
-            border:1px solid #ddd;
-            border-radius:24px;
-            padding:6px 12px;
-            box-shadow:0 1px 3px rgba(0,0,0,0.03);
-        }
-        .search input{
-            border:0;
-            outline:0;
-            flex:1;
-            font-size:14px;
-            background:transparent;
-            padding:6px 4px;
-        }
-        .login-btn{
-            margin-left:auto;
-            background:transparent;
-            border:1px solid var(--accent);
-            color:var(--accent);
-            padding:8px 14px;
-            border-radius:6px;
-            cursor:pointer;
-            font-weight:600;
-        }
-
-        /* Main layout */
-        main{
-            min-height:calc(100vh - var(--header-height));
-            display:flex;
-            align-items:flex-start;
-            justify-content:center;
-            padding:24px 16px;
-        }
-        .center-col{
-            width:100%;
-            max-width:var(--center-width);
-            display:flex;
-            flex-direction:column;
-            gap:var(--card-gap);
-            align-items:stretch;
-            padding-bottom:24px;
-            min-height:100%;
-        }
-
-        /* Recipe card */
-        .recipe-card{
-            display:flex;
-            gap:12px;
-            background:var(--card-bg);
-            border-radius:10px;
-            padding:var(--card-padding);
-            align-items:flex-start;
-            box-shadow:0 6px 18px rgba(20,30,50,0.04);
-            border:1px solid #eef2f6;
-        }
-        .recipe-card img{
-            width:var(--img-size);
-            height:var(--img-size);
-            object-fit:cover;
-            border-radius:8px;
-            flex:0 0 var(--img-size);
-            background:#eee;
-        }
-        .recipe-info{
-            display:flex;
-            flex-direction:column;
-            justify-content:center;
-        }
-        .recipe-title{
-            margin:0;
-            font-size:18px;
-            font-weight:700;
-        }
-        .recipe-diff{
-            margin:6px 0 0 0;
-            font-size:14px;
-            color:#666;
-        }
-
-        /* Ensure five items fill vertical space nicely on large screens */
-        @media(min-height:900px){
-            .center-col{justify-content:center}
-            .recipe-card{padding:16px}
-        }
-
-        @media(max-width:640px){
-            .search{width:80%}
-            .recipe-card{gap:10px}
-            .recipe-info .recipe-title{font-size:16px}
-        }
+        body{font-family:Inter, Roboto, Arial, sans-serif;background:#f6f7f9;margin:0;padding:24px}
+        .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+        .search{display:flex;gap:8px}
+        input[type="search"]{padding:8px;border:1px solid #ddd;border-radius:6px;min-width:300px}
+        button{padding:8px 12px;background:#2b7cff;color:#fff;border:0;border-radius:6px;cursor:pointer}
+        .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+        .card{background:#fff;padding:12px;border-radius:10px;box-shadow:0 6px 16px rgba(20,30,50,0.05)}
+        .title{font-weight:700;margin:0 0 6px 0}
+        .controls{margin-top:16px;text-align:center}
+        .empty{color:#666;text-align:center;padding:24px}
     </style>
 </head>
 <body>
-<header>
-    <div class="header-inner">
-        <div class="search-wrap">
-            <form class="search" th:action="@{/buscar}" method="get">
-                <input type="search" name="q" placeholder="Buscar recetas..." />
-                <button type="submit" style="background:var(--accent);color:#fff;border:0;padding:6px 10px;border-radius:6px;cursor:pointer">Buscar</button>
-            </form>
-        </div>
+<div class="top">
+    <h1>Recetas</h1>
 
-        <a class="login-btn" th:href="@{/login}">Iniciar sesión</a>
-    </div>
-</header>
+    <form th:action="@{ / }" method="get" class="search">
+        <input type="search" name="q" th:value="${q}" placeholder="Buscar receta por nombre..." />
+        <button type="submit">Buscar</button>
+    </form>
+</div>
 
-<main>
-    <div class="center-col">
-        <!-- Itera sobre tu lista de recetas y muestra hasta 5 -->
-        <div class="recipe-card" th:each="receta,stat : ${recetas}" th:if="${stat.index} &lt; 5">
-            <img th:src="${receta.url}" th:alt="${receta.titulo}" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Crect width='100%25' height='100%25' fill='%23ddd'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23888' font-size='12'%3EImagen%3C/text%3E%3C/svg%3E" />
-            <div class="recipe-info">
-                <h3 class="recipe-title" th:text="${receta.titulo}">Título de ejemplo</h3>
-                <p class="recipe-diff">Dificultad: <span th:text="${receta.dificultad}">3</span></p>
+<section>
+    <h2 th:if="${#lists.isEmpty(resultados)}">Destacadas</h2>
+    <h2 th:if="${!#lists.isEmpty(resultados)}">Resultados de búsqueda: <span th:text="${q}"></span></h2>
+
+    <div id="grid" class="grid">
+        <!-- Si hay resultados de búsqueda, mostrarlos (server-side) -->
+        <div th:if="${!#lists.isEmpty(resultados)}" th:each="receta : ${resultados}">
+            <div class="card">
+                <p class="title" th:text="${receta.titulo}">Titulo receta</p>
+                <p th:text="${#strings.substring(receta.descripcion,0,120) + (receta.descripcion.length()>120 ? '...' : '')}">Descripción corta</p>
+                <a th:href="@{/recetas/{id}(id=${receta.id})}">Ver receta</a>
             </div>
         </div>
 
-        <!-- Si no usas Thymeleaf, puedes copiar 5 bloques como el siguiente y cambiar src/título/dificultad -->
-        <!--
-        <div class="recipe-card">
-          <img src="https://via.placeholder.com/96" alt="Ejemplo" />
-          <div class="recipe-info">
-            <h3 class="recipe-title">Tarta de manzana</h3>
-            <p class="recipe-diff">Dificultad: 2</p>
-          </div>
+        <!-- Si no hay resultados, mostrar las 5 destacadas (server-side) -->
+        <div th:if="${#lists.isEmpty(resultados)}" th:each="receta : ${destacadas}">
+            <div class="card">
+                <p class="title" th:text="${receta.titulo}">Titulo receta</p>
+                <p th:text="${#strings.substring(receta.descripcion,0,120) + (receta.descripcion.length()>120 ? '...' : '')}">Descripción corta</p>
+                <a th:href="@{/recetas/{id}(id=${receta.id})}">Ver receta</a>
+            </div>
         </div>
-        -->
     </div>
-</main>
+
+    <div class="controls">
+        <button id="expandBtn" type="button">Mostrar hasta 100</button>
+        <button id="moreBtn" type="button" style="display:none;margin-left:8px">Cargar siguientes 100</button>
+    </div>
+
+    <div class="empty" id="noMore" style="display:none">No hay más recetas.</div>
+</section>
+
+<script>
+    (function(){
+        const grid = document.getElementById('grid');
+        const expandBtn = document.getElementById('expandBtn');
+        const moreBtn = document.getElementById('moreBtn');
+        const noMore = document.getElementById('noMore');
+
+        let page = 0;
+        const blockSize = 100;
+        const q = new URLSearchParams(window.location.search).get('q') || '';
+
+        function renderReplace(items) {
+            grid.innerHTML = items.map(r => `
+          <div class="card">
+            <p class="title">\${escapeHtml(r.titulo)}</p>
+            <p>\${escapeHtml((r.descripcion||'').slice(0,120))}\${(r.descripcion && r.descripcion.length>120)?'...':''}</p>
+            <a href="/recetas/\${r.id}">Ver receta</a>
+          </div>
+        `).join('');
+        }
+
+        function renderAppend(items) {
+            grid.insertAdjacentHTML('beforeend', items.map(r => `
+          <div class="card">
+            <p class="title">\${escapeHtml(r.titulo)}</p>
+            <p>\${escapeHtml((r.descripcion||'').slice(0,120))}\${(r.descripcion && r.descripcion.length>120)?'...':''}</p>
+            <a href="/recetas/\${r.id}">Ver receta</a>
+          </div>
+        `).join(''));
+        }
+
+        function escapeHtml(s) {
+            return String(s)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        async function fetchPage(p, size) {
+            const params = new URLSearchParams({ page: p, size: size });
+            if (q) params.set('q', q);
+            const res = await fetch('/api/recetas?' + params.toString());
+            if (!res.ok) throw new Error('Error al cargar recetas');
+            return res.json();
+        }
+
+        expandBtn.addEventListener('click', async () => {
+            try {
+                page = 0;
+                const items = await fetchPage(page, blockSize);
+                if (items.length === 0) {
+                    noMore.style.display = '';
+                    expandBtn.style.display = 'none';
+                    moreBtn.style.display = 'none';
+                    return;
+                }
+                renderReplace(items);
+                expandBtn.style.display = 'none';
+                if (items.length < blockSize) {
+                    moreBtn.style.display = 'none';
+                    noMore.style.display = '';
+                } else {
+                    moreBtn.style.display = '';
+                    noMore.style.display = 'none';
+                    page = 1;
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        });
+
+        moreBtn.addEventListener('click', async () => {
+            try {
+                const items = await fetchPage(page, blockSize);
+                if (items.length === 0) {
+                    moreBtn.style.display = 'none';
+                    noMore.style.display = '';
+                    return;
+                }
+                renderAppend(items);
+                if (items.length < blockSize) {
+                    moreBtn.style.display = 'none';
+                    noMore.style.display = '';
+                } else {
+                    page++;
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        });
+    })();
+</script>
 </body>
 </html>

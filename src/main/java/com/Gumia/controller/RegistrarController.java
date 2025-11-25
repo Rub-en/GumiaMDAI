@@ -30,7 +30,7 @@ public class RegistrarController {
             return "register";
         }
         if (usuarioRepository.findByEmail(usuario.getEmail()).isPresent()
-                || usuarioRepository.findByUsername(usuario.getNombre()).isPresent()) {
+                || usuarioRepository.findByNombre(usuario.getNombre()).isPresent()) {
             model.addAttribute("error", "Usuario o correo ya registrado");
             return "register";
         }
