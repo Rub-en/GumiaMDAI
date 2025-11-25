@@ -46,7 +46,8 @@ public class IndexController {
 
         model.addAttribute("resultados", resultados);
         model.addAttribute("destacadas", destacadas);
-        model.addAttribute("q", q == null ? "" : q);
+        model.addAttribute("q", query);
+        model.addAttribute("recetas", resultados); // compatibilidad con plantillas antiguas
         return "index";
     }
 }

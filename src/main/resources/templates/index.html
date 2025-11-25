@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Inicio - Recetas</title>
+    <!-- src/main/resources/templates/index.html
     <style>
         body{font-family:Inter, Roboto, Arial, sans-serif;background:#f6f7f9;margin:0;padding:24px}
         .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
@@ -15,7 +16,23 @@
         .title{font-weight:700;margin:0 0 6px 0}
         .controls{margin-top:16px;text-align:center}
         .empty{color:#666;text-align:center;padding:24px}
+    </style>-->
+    <style>
+        /* reemplaza la regla .grid existente por una columna */
+        .grid{
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        /* asegurar que cada card ocupe todo el ancho disponible */
+        .card{
+            width: 100%;
+            box-sizing: border-box;
+        }
     </style>
+
+
 </head>
 <body>
 <div class="top">
@@ -36,8 +53,10 @@
         <div th:if="${!#lists.isEmpty(resultados)}" th:each="receta : ${resultados}">
             <div class="card">
                 <p class="title" th:text="${receta.titulo}">Titulo receta</p>
-                <p th:text="${#strings.substring(receta.descripcion,0,120) + (receta.descripcion.length()>120 ? '...' : '')}">Descripción corta</p>
+                <!-- html -->
+                <p th:text="${receta.descripcion != null ? (#strings.substring(receta.descripcion, 0, (receta.descripcion.length()>120?120:receta.descripcion.length())) + (receta.descripcion.length()>120 ? '...' : '')) : ''}">Descripción corta</p>
                 <a th:href="@{/recetas/{id}(id=${receta.id})}">Ver receta</a>
+
             </div>
         </div>
 
