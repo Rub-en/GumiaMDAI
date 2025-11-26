@@ -1,41 +1,37 @@
 package com.Gumia.controller;
 
 import com.Gumia.model.Usuario;
-import com.Gumia.repositories.UsuarioRepository;
+import com.Gumia.service.UsuarioService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class RegistrarController {
 
-    private final UsuarioRepository usuarioRepository;
-    //private final PasswordEncoder passwordEncoder;
+    private final UsuarioService usuarioService;
 
-    public RegistrarController(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
-        //this.passwordEncoder = passwordEncoder;
+    public RegistrarController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
     }
 
-    @GetMapping("/register")
-    public String showRegisterForm(Model model) {
+    @GetMapping("/registrar")
+    public String mostrarFormularioRegistro(Model model) {
         model.addAttribute("usuario", new Usuario());
-        return "register";
+        return "registro";
     }
 
-    @PostMapping("/register")
-    public String register(@ModelAttribute Usuario usuario, @RequestParam String confirmPassword, Model model) {
-        if (!usuario.getPassword().equals(confirmPassword)) {
-            model.addAttribute("error", "Las contraseñas no coinciden");
-            return "register";
+    @PostMapping("/registrar")
+    public String registrarUsuario(@ModelAttribute("usuario") Usuario usuario, Model model) {
+        try {
+            usuarioService.registrarUsuario(usuario);
+            return "redirect:/login"; // Éxito -> Login
+        } catch (Exception e) {
+            // Error (email duplicado) -> Volver al formulario con mensaje
+            model.addAttribute("error", "Error: " + e.getMessage());
+            return "registro";
         }
-        if (usuarioRepository.findByEmail(usuario.getEmail()).isPresent()
-                || usuarioRepository.findByNombre(usuario.getNombre()).isPresent()) {
-            model.addAttribute("error", "Usuario o correo ya registrado");
-            return "register";
-        }
-        //usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
-        usuarioRepository.save(usuario);
-        return "redirect:/login";
     }
 }

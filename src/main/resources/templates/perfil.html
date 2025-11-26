@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <title>Mi Perfil - Gumia</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <!-- Usamos el mismo CSS para mantener los estilos de colores de Gumia -->
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="container mt-5">
+
+<nav class="mb-4 d-flex justify-content-between">
+    <a href="/" class="btn btn-outline-secondary">⬅ Volver a Inicio</a>
+    <a href="/logout" class="btn btn-danger">Cerrar Sesión</a>
+</nav>
+
+<!-- Datos del Usuario: Bloque de información general -->
+<div class="card mb-4 border-primary">
+    <div class="card-header bg-primary text-white">
+        <h3 class="mb-0">👤 Mi Perfil</h3>
+    </div>
+    <div class="card-body">
+        <!-- CORRECCIÓN: Título en grande con el nombre del usuario -->
+        <h4 class="fw-bold text-dark" th:text="${usuario.nombre}">[Nombre del Usuario]</h4>
+        <p class="text-muted" th:text="${usuario.email}">[Email]</p>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Columna 1: Mis Recetas Publicadas -->
+    <div class="col-md-6">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="text-secondary-emphasis">📚 Mis Recetas</h4>
+            <a href="/receta/nueva" class="btn btn-primary btn-sm">➕ Nueva Receta</a>
+        </div>
+
+        <div class="list-group">
+            <div th:each="receta : ${usuario.recetasPublicadas}" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <a th:href="@{/receta/{id}(id=${receta.id})}" class="h5 mb-1 text-decoration-none text-dark" th:text="${receta.titulo}">Título</a>
+                    <small class="text-muted" th:text="${receta.categoria}">Cat</small>
+                </div>
+                <p class="mb-1 small text-muted" th:text="${receta.descripcion}">Desc</p>
+
+                <a th:href="@{/receta/borrar/{id}(id=${receta.id})}"
+                   class="btn btn-outline-danger btn-sm mt-2"
+                   onclick="return confirm('¿Seguro que quieres borrar esta receta?');">🗑 Borrar</a>
+            </div>
+
+            <div th:if="${#lists.isEmpty(usuario.recetasPublicadas)}" class="alert alert-light text-center border">
+                Aún no has publicado ninguna receta.
+            </div>
+        </div>
+    </div>
+
+    <!-- Columna 2: Mis Favoritos -->
+    <div class="col-md-6">
+        <h4 class="mb-3 text-secondary-emphasis">❤️ Mis Favoritos</h4>
+        <div class="list-group">
+            <div th:each="fav : ${usuario.favoritos}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <a th:href="@{/receta/{id}(id=${fav.id})}" class="text-decoration-none text-dark fw-bold" th:text="${fav.titulo}">Título</a>
+
+                <a th:href="@{/favoritos/remove/{id}(id=${fav.id})}" class="btn btn-sm btn-outline-secondary" title="Quitar de favoritos">❌</a>
+            </div>
+
+            <div th:if="${#lists.isEmpty(usuario.favoritos)}" class="alert alert-light text-center border">
+                No tienes recetas favoritas guardadas.
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

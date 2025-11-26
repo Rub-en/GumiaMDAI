@@ -1,78 +1,114 @@
 package com.Gumia.controller;
 
 import com.Gumia.model.Receta;
+import com.Gumia.model.Usuario;
 import com.Gumia.service.RecetaService;
-import com.Gumia.repositories.RecetaRepository;
-import com.Gumia.repositories.UsuarioRepository;
-import org.springframework.data.domain.*;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.util.List;
 
 @Controller
-@RequestMapping("/recetas")
 public class RecetaController {
 
     private final RecetaService recetaService;
-    private final UsuarioRepository usuarioRepository;
-    private final RecetaRepository recetaRepository;
 
-    public RecetaController(RecetaService recetaService, UsuarioRepository usuarioRepository, RecetaRepository recetaRepository) {
+    // Solo inyectamos RecetaService, el UsuarioService sobraba aquí
+    public RecetaController(RecetaService recetaService) {
         this.recetaService = recetaService;
-        this.usuarioRepository = usuarioRepository;
-        this.recetaRepository = recetaRepository;
     }
 
-    @GetMapping
-    public String listarRecetas(Model model) {
-        model.addAttribute("recetas", recetaService.listarTodas());
-        return "recetas";
+    // --- VISTAS ---
+
+    @GetMapping("/receta/{id}")
+    public String verDetalle(@PathVariable Long id, Model model) {
+        Receta receta = recetaService.buscarPorId(id)
+                .orElseThrow(() -> new RuntimeException("Receta no encontrada"));
+
+        model.addAttribute("receta", receta);
+        return "detalles_receta"; // Requiere detalles_receta.html
     }
 
-    @GetMapping("/nueva")
-    public String mostrarFormulario(Model model) {
-        model.addAttribute("receta", new Receta());
-        model.addAttribute("usuarios", usuarioRepository.findAll());
-        return "form_receta";
-    }
-
-    @PostMapping("/guardar")
-    public String guardarReceta(@ModelAttribute Receta receta) {
-        recetaService.guardar(receta);
-        return "redirect:/recetas";
-    }
-
-    @GetMapping("/")
-    public String index(@RequestParam(required = false) String q, Model model) {
-        if (q != null && !q.isBlank()) {
-            // Mostrar hasta 100 coincidencias iniciales en la vista (puede cargarse más desde la API)
-            Page<Receta> page = recetaRepository.findByTituloContainingIgnoreCase(q, PageRequest.of(0, 100, Sort.by("id").descending()));
-            model.addAttribute("resultados", page.getContent());
-            model.addAttribute("q", q);
-        } else {
-            PageRequest pr = PageRequest.of(0, 5, Sort.by("id").descending());
-            Page<Receta> destacados = recetaRepository.findAll(pr);
-            model.addAttribute("destacadas", destacados.getContent());
+    @GetMapping("/receta/nueva")
+    public String formularioNuevaReceta(HttpSession session, Model model) {
+        if (session.getAttribute("usuarioLogueado") == null) {
+            return "redirect:/login";
         }
+        model.addAttribute("receta", new Receta());
+        return "form_receta"; // Requiere form_receta.html
+    }
+
+    // --- ACCIONES ---
+
+    @PostMapping("/receta/guardar")
+    public String guardarReceta(Receta receta, HttpSession session) {
+        Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+
+        if (usuarioLogueado == null) {
+            return "redirect:/login";
+        }
+
+        // LÓGICA DE SEGURIDAD
+        if (receta.getId() != null) {
+            Receta original = recetaService.buscarPorId(receta.getId()).orElse(null);
+            if (original != null) {
+                if (!original.getAutor().getId().equals(usuarioLogueado.getId())) {
+                    return "redirect:/perfil?error=no_autorizado";
+                }
+                receta.setAutor(original.getAutor());
+            }
+        } else {
+            receta.setAutor(usuarioLogueado);
+        }
+
+        recetaService.guardarReceta(receta, usuarioLogueado);
+        return "redirect:/perfil";
+    }
+
+    @GetMapping("/receta/borrar/{id}")
+    public String borrarReceta(@PathVariable Long id, HttpSession session) {
+        Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+
+        if (usuarioLogueado == null) {
+            return "redirect:/login";
+        }
+
+        Receta receta = recetaService.buscarPorId(id).orElse(null);
+
+        if (receta != null && receta.getAutor().getId().equals(usuarioLogueado.getId())) {
+            recetaService.borrarReceta(id);
+        }
+
+        return "redirect:/perfil";
+    }
+
+    // --- BUSCADOR Y FILTROS ---
+
+    @GetMapping("/buscar")
+    public String buscar(@RequestParam String q, Model model) {
+        Page<Receta> resultados = recetaService.buscarPorTitulo(q, PageRequest.of(0, 10));
+        model.addAttribute("recetas", resultados.getContent());
         return "index";
     }
 
-    @GetMapping("/api/recetas")
-    @ResponseBody
-    public List<Receta> apiRecetas(@RequestParam(defaultValue = "0") int page,
-                                   @RequestParam(defaultValue = "100") int size,
-                                   @RequestParam(required = false) String q) {
-        PageRequest pageable = PageRequest.of(Math.max(0, page), Math.max(1, size), Sort.by("id").descending());
-        Page<Receta> result;
-        if (q != null && !q.isBlank()) {
-            result = recetaRepository.findByTituloContainingIgnoreCase(q, pageable);
-        } else {
-            result = recetaRepository.findAll(pageable);
-        }
-        return result.getContent();
+    @GetMapping("/recetas/categoria")
+    public String listarPorCategoria(@RequestParam String nombre, Model model) {
+        List<Receta> filtradas = recetaService.buscarPorCategoria(nombre);
+        model.addAttribute("recetas", filtradas);
+        return "index";
+    }
+
+    @GetMapping("/recetas/dificultad")
+    public String listarPorDificultad(@RequestParam int nivel, Model model) {
+        List<Receta> filtradas = recetaService.buscarPorDificultad(nivel);
+        model.addAttribute("recetas", filtradas);
+        return "index";
     }
 }

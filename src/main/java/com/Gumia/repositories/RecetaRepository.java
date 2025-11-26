@@ -2,10 +2,19 @@ package com.Gumia.repositories;
 
 import com.Gumia.model.Receta;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
+
+import java.util.List;
 
 public interface RecetaRepository extends JpaRepository<Receta, Long> {
-    Page<Receta> findByTituloContainingIgnoreCase(String q, PageRequest pageable);
+
+    // Búsqueda por título (para el buscador avanzado)
+    Page<Receta> findByTituloContainingIgnoreCase(String titulo, Pageable pageable);
+
+    // Filtro por Categoría (para la Home o listados)
+    List<Receta> findByCategoria(String categoria);
+
+    // Filtro por Dificultad (para los filtros avanzados)
+    List<Receta> findByDificultad(int dificultad);
 }
