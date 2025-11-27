@@ -1,6 +1,7 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:gumia;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    # Creamos una carpeta llamada 'data' en tu proyecto y guardará ahí todo.
+    url: jdbc:h2:file:./data/gumia_db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
     username: sa
     password:

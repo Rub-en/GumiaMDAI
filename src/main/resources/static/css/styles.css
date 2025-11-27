@@ -1,126 +1,144 @@
 :root {
-    /* --- PALETA DE COLORES GUMIA (Basada en tu logo) --- */
-    --primary-color: #C45A3D;   /* Terracota del chef */
-    --primary-hover: #A3462D;
-    --secondary-color: #F9EBE7; /* Fondo suave */
-    --text-heading: #4A3B32;    /* Marrón oscuro */
-    --text-body: #5D4E46;
-    --bg-body: #FFFCFA;
-    --card-bg: #FFFFFF;
-    --border-radius: 15px;
+    /* --- PALETA DE COLORES GUMIA --- */
+    --gumia-primary: #C86B53;      /* Terracota (Color Principal) */
+    --gumia-primary-dark: #A64E36; /* Terracota oscuro (Hover) */
+    --gumia-secondary: #EBC8C4;    /* Rosa Empolvado (Fondos suaves) */
+    --gumia-text: #4A3B32;         /* Marrón Chocolate (Texto Títulos) */
+    --gumia-body-text: #6D5E55;    /* Marrón suave (Texto Párrafos) */
+    --gumia-bg: #FFFBF7;           /* Crema muy suave (Fondo Web) */
+    --gumia-card-bg: #FFFFFF;      /* Blanco puro (Tarjetas) */
 }
 
+/* --- GENERALES --- */
 body {
-    background-color: var(--bg-body);
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    color: var(--text-body);
+    background-color: var(--gumia-bg);
+    color: var(--gumia-body-text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     overflow-x: hidden;
 }
 
-/* ... (Resto de estilos de Navbar y Hero Section iguales que antes) ... */
-
-/* --- FLIP CARDS (Tarjetas Giratorias) --- */
-
-/* Contenedor principal: Define el tamaño y la perspectiva */
-.flip-card-container {
-    background-color: transparent;
-    height: 350px; /* Altura fija */
-    perspective: 1000px; /* Efecto 3D */
-    margin-bottom: 1rem;
+h1, h2, h3, h4, h5, .navbar-brand {
+    color: var(--gumia-text);
+    font-family: 'Georgia', serif;
 }
 
-/* El elemento que gira realmente */
-.flip-card-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    transition: transform 0.6s;
-    transform-style: preserve-3d;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    border-radius: var(--border-radius);
+a {
+    color: var(--gumia-primary);
+    text-decoration: none;
+    transition: color 0.2s;
 }
 
-/* Acción de girar al pasar el ratón */
-.flip-card-container:hover .flip-card-inner {
-    transform: rotateY(180deg);
+a:hover {
+    color: var(--gumia-primary-dark);
 }
 
-/* Configuración común para frente y dorso */
-.flip-card-front, .flip-card-back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    -webkit-backface-visibility: hidden; /* Safari */
-    backface-visibility: hidden; /* Oculta la parte trasera al estar de frente */
-    border-radius: var(--border-radius);
+/* --- OVERRIDES DE BOOTSTRAP (Quitamos el azul) --- */
+
+/* Fondos y Textos */
+.bg-primary { background-color: var(--gumia-primary) !important; }
+.text-primary { color: var(--gumia-primary) !important; }
+
+/* Botones Sólidos (Buscar, Filtro, Login) */
+.btn-primary {
+    background-color: var(--gumia-primary);
+    border-color: var(--gumia-primary);
+}
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+    background-color: var(--gumia-primary-dark) !important;
+    border-color: var(--gumia-primary-dark) !important;
+}
+
+/* Botones Borde (Registrarse, Ver Receta) */
+.btn-outline-primary {
+    color: var(--gumia-primary);
+    border-color: var(--gumia-primary);
+}
+.btn-outline-primary:hover, .btn-outline-primary:active {
+    background-color: var(--gumia-primary);
+    color: white;
+    border-color: var(--gumia-primary);
+}
+
+/* Badges (Etiquetas) - Convertimos el azul cyan en Rosa */
+.bg-info {
+    background-color: var(--gumia-secondary) !important;
+    color: var(--gumia-text) !important;
+}
+
+/* --- TARJETAS RECETAS --- */
+.card {
+    border: none;
+    border-radius: 15px;
+    background-color: var(--gumia-card-bg);
+    box-shadow: 0 4px 15px rgba(74, 59, 50, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     overflow: hidden;
 }
 
-/* --- CARA FRONTAL (Solo Imagen) --- */
-.flip-card-front {
-    background-color: white;
-    color: black;
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(200, 107, 83, 0.15);
 }
 
-.recipe-img-front {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* La imagen llena todo el espacio */
+.card-img-top {
+    border-bottom: 4px solid var(--gumia-secondary);
 }
 
-/* --- CARA TRASERA (Info y Botón) --- */
-.flip-card-back {
-    background-color: var(--primary-color); /* Fondo Terracota */
-    color: white;
-    transform: rotateY(180deg); /* Inicialmente girada */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+.card-title {
+    font-weight: bold;
+    color: var(--gumia-text);
 }
 
-.flip-card-back h5 {
+/* --- FILTRO Y DROPDOWN (Estilos Específicos Grandes) --- */
+
+/* Botón del filtro */
+.dropdown-toggle {
+    background-color: var(--gumia-primary) !important;
+    border-color: var(--gumia-primary) !important;
     color: white !important;
-    font-family: 'Georgia', serif;
+    font-size: 1.2rem !important; /* Letra grande */
+    padding-top: 10px;
+    padding-bottom: 10px;
     font-weight: bold;
-    font-size: 1.4rem;
-    margin-bottom: 10px;
 }
 
-.flip-card-back p {
-    color: #f0f0f0;
-    font-size: 0.9rem;
-    margin-bottom: 15px;
-}
-
-.category-badge-back {
-    background-color: white;
-    color: var(--primary-color);
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-weight: bold;
-    font-size: 0.8rem;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-}
-
-.btn-view-recipe {
-    background-color: white;
-    color: var(--primary-color);
-    font-weight: bold;
-    padding: 10px 25px;
-    border-radius: 30px;
-    text-decoration: none;
-    transition: transform 0.2s;
-    margin-top: 10px;
+/* Lista desplegable */
+.dropdown-menu {
     border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(74, 59, 50, 0.15);
+    padding: 10px;
+    background-color: white;
+    font-size: 1.1rem; /* Opciones más grandes */
 }
 
-.btn-view-recipe:hover {
-    transform: scale(1.05);
-    background-color: #f8f8f8;
-    color: var(--primary-hover);
+.dropdown-item {
+    border-radius: 10px;
+    padding: 12px 20px;
+    color: var(--gumia-text);
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.dropdown-item:hover, .dropdown-item:focus {
+    background-color: var(--gumia-secondary);
+    color: var(--gumia-primary-dark);
+}
+
+.dropdown-item.active {
+    background-color: var(--gumia-primary);
+    color: white;
+}
+
+/* --- FORMULARIOS --- */
+.form-control:focus, .form-select:focus {
+    border-color: var(--gumia-secondary);
+    box-shadow: 0 0 0 0.25rem rgba(200, 107, 83, 0.25);
+}
+
+/* --- NAVBAR AJUSTES --- */
+.navbar .btn {
+    text-transform: uppercase;
+    letter-spacing: 1px; /* Corregido a 1px para evitar warning */
+    font-size: 0.9rem;
 }
