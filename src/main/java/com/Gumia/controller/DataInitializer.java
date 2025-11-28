@@ -56,7 +56,7 @@ public class DataInitializer implements CommandLineRunner {
                     
                     5. Ya solo queda salpimentar la carne a nuestro gusto y coronarla con un par de buenas cucharadas de la salsa de verduras.
                     """,
-                    "https://images.unsplash.com/photo-1600891964092-4316c288032e?auto=format&fit=crop&w=800&q=80",
+                    "/img/ternera.jpg",
                     "Carnes y aves",
                     20, 2,
                     Arrays.asList(
@@ -89,7 +89,7 @@ public class DataInitializer implements CommandLineRunner {
                     
                     7. Una vez horneado, dejar en el molde 5 minutos y volcar sobre una rejilla hasta que se enfríe por completo.
                     """,
-                    "https://images.unsplash.com/photo-1627308595229-7830a5c91f9f?auto=format&fit=crop&w=800&q=80",
+                    "/img/bizcocho.jpg",
                     "Postres y dulces",
                     50, 1,
                     Arrays.asList(
@@ -121,7 +121,7 @@ public class DataInitializer implements CommandLineRunner {
                     
                     6. Mezclamos rápidamente y servimos.
                     """,
-                    "https://images.unsplash.com/photo-1612874742237-6526221588e3?auto=format&fit=crop&w=800&q=80",
+                    "/img/pasta.jpg",
                     "Pasta",
                     25, 2,
                     Arrays.asList(
@@ -159,7 +159,7 @@ public class DataInitializer implements CommandLineRunner {
                     
                     10. Servir la crema con unas gotas de aceite de semilla de calabaza y espolvorear unas semillas de calabaza tostadas sobre ella.
                     """,
-                    "https://images.unsplash.com/photo-1476718406336-bb5a9690ee2b?auto=format&fit=crop&w=800&q=80",
+                    "/img/crema.jpg",
                     "Sopas, Cremas y Tortillas",
                     27, 1,
                     Arrays.asList(
@@ -189,7 +189,7 @@ public class DataInitializer implements CommandLineRunner {
                     
                     6. Condimentar las tortitas todavía calientes según el propio gusto: con miel, mermelada, crema de cacao...
                     """,
-                    "https://images.unsplash.com/photo-1506084868230-bb9d95c24759?auto=format&fit=crop&w=800&q=80",
+                    "/img/tortitas.jpg",
                     "Postres y dulces",
                     80, 2,
                     Arrays.asList(
@@ -222,7 +222,7 @@ public class DataInitializer implements CommandLineRunner {
                     
                     7. Una vez la tengamos todas cortamos el papel de horno para que estén individuales cada hamburguesa casera.
                     """,
-                    "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80",
+                    "/img/hamburguesa.jpg",
                     "Carnes y aves",
                     40, 2,
                     Arrays.asList(
@@ -245,7 +245,7 @@ public class DataInitializer implements CommandLineRunner {
                     
                     2. Aplastamos el aguacate con un tenedor. Añadimos los tomates, la cebolleta y el zumo de lima. Rectificamos de sal. Yo le pongo una especia que tengo que le da un toque picante, pero le podéis poner jalapeños.
                     """,
-                    "https://images.unsplash.com/photo-1542699863-71d5b30646c2?auto=format&fit=crop&w=800&q=80",
+                    "/img/guaca.jpg",
                     "Aperitivos",
                     30, 1,
                     Arrays.asList(
@@ -279,7 +279,7 @@ public class DataInitializer implements CommandLineRunner {
                     
                     8. A los 45 minutos sacamos el pollo del horno y le damos la vuelta. Lo volvemos a meter a hornear ahora con las pechugas para arriba hasta que finalice el tiempo.
                     """,
-                    "https://images.unsplash.com/photo-1598103442097-8b74394b95c6?auto=format&fit=crop&w=800&q=80",
+                    "/img/pollo.jpg",
                     "Carnes y aves",
                     130, 3,
                     Arrays.asList(
@@ -312,7 +312,7 @@ public class DataInitializer implements CommandLineRunner {
                     
                     7. Dejamos enfriar en la nevera y servimos con un poco de canela en polvo por encima.
                     """,
-                    "https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=800&q=80",
+                    "/img/arroz.jpg",
                     "Postres y dulces",
                     50, 2,
                     Arrays.asList(
