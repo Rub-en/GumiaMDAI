@@ -10,7 +10,7 @@ import java.util.List;
 public interface RecetaRepository extends JpaRepository<Receta, Long> {
 
     // Búsqueda por título (para el buscador avanzado)
-    Page<Receta> findByTituloContainingIgnoreCase(String titulo, Pageable pageable);
+    Page<Receta> findDistinctByTituloContainingIgnoreCaseOrIngredientes_NombreContainingIgnoreCase(String titulo, String ingrediente, Pageable pageable);
 
     // Filtro por Categoría (para la Home o listados)
     List<Receta> findByCategoria(String categoria);

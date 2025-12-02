@@ -20,7 +20,6 @@ public class RecetaController {
 
     private final RecetaService recetaService;
 
-    // Solo inyectamos RecetaService, el UsuarioService sobraba aquí
     public RecetaController(RecetaService recetaService) {
         this.recetaService = recetaService;
     }
@@ -31,9 +30,8 @@ public class RecetaController {
     public String verDetalle(@PathVariable Long id, Model model) {
         Receta receta = recetaService.buscarPorId(id)
                 .orElseThrow(() -> new RuntimeException("Receta no encontrada"));
-
         model.addAttribute("receta", receta);
-        return "detalles_receta"; // Requiere detalles_receta.html
+        return "detalles_receta";
     }
 
     @GetMapping("/receta/nueva")
@@ -42,7 +40,7 @@ public class RecetaController {
             return "redirect:/login";
         }
         model.addAttribute("receta", new Receta());
-        return "form_receta"; // Requiere form_receta.html
+        return "form_receta";
     }
 
     // --- ACCIONES ---
@@ -50,7 +48,6 @@ public class RecetaController {
     @PostMapping("/receta/guardar")
     public String guardarReceta(Receta receta, HttpSession session) {
         Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
-
         if (usuarioLogueado == null) {
             return "redirect:/login";
         }
@@ -75,17 +72,14 @@ public class RecetaController {
     @GetMapping("/receta/borrar/{id}")
     public String borrarReceta(@PathVariable Long id, HttpSession session) {
         Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
-
         if (usuarioLogueado == null) {
             return "redirect:/login";
         }
 
         Receta receta = recetaService.buscarPorId(id).orElse(null);
-
         if (receta != null && receta.getAutor().getId().equals(usuarioLogueado.getId())) {
             recetaService.borrarReceta(id);
         }
-
         return "redirect:/perfil";
     }
 
@@ -94,7 +88,13 @@ public class RecetaController {
     @GetMapping("/buscar")
     public String buscar(@RequestParam String q, Model model) {
         Page<Receta> resultados = recetaService.buscarPorTitulo(q, PageRequest.of(0, 10));
+
         model.addAttribute("recetas", resultados.getContent());
+
+        if (resultados.isEmpty()) {
+            model.addAttribute("mensajeBusqueda", "No se encontraron recetas con: " + q);
+        }
+
         return "index";
     }
 
@@ -110,5 +110,32 @@ public class RecetaController {
         List<Receta> filtradas = recetaService.buscarPorDificultad(nivel);
         model.addAttribute("recetas", filtradas);
         return "index";
+    }
+
+    // --- MÉTODO NUEVO AÑADIDO PARA EDITAR ---
+    @GetMapping("/receta/editar/{id}")
+    public String formularioEditarReceta(@PathVariable Long id, Model model, HttpSession session) {
+        // 1. Verificación de seguridad (Sesión)
+        Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
+        if (usuarioLogueado == null) {
+            return "redirect:/login";
+        }
+
+        // 2. Buscar la receta
+        Receta receta = recetaService.buscarPorId(id)
+                .orElseThrow(() -> new RuntimeException("Receta no encontrada"));
+
+        // 3. Verificación de seguridad (Propiedad)
+        // Solo el dueño puede editarla
+        if (!receta.getAutor().getId().equals(usuarioLogueado.getId())) {
+            return "redirect:/perfil?error=no_autorizado";
+        }
+
+        // 4. Pasamos la receta existente al modelo
+        // Thymeleaf rellenará los campos (th:field) automáticamente con estos datos
+        model.addAttribute("receta", receta);
+
+        // Reutilizamos el mismo formulario de creación
+        return "form_receta";
     }
 }

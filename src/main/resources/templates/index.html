@@ -86,7 +86,7 @@
         <div class="col-md-4 mb-5" th:each="receta : ${recetas}">
             <div class="card h-100 shadow-sm">
 
-                <img th:src="${receta.url_imagen != null and !receta.url_imagen.isEmpty() ? receta.url_imagen : 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'}"
+                <img th:src="${receta.url_imagen != null or !receta.url_imagen.isEmpty() ? receta.url_imagen : 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'}"
                      class="card-img-top img-error-handler"
                      alt="Foto de la receta"
                      style="height: 240px; object-fit: cover;">

@@ -3,18 +3,17 @@
 <head>
     <title>Mi Perfil - Gumia</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
 
 <div class="container mt-5">
-
     <nav class="mb-4 d-flex justify-content-between">
         <a href="/" class="btn btn-outline-primary btn-lg px-4 fw-bold">
-            ⬅ Volver a Inicio
+            Volver a Inicio
         </a>
-
         <a href="/logout" class="btn btn-danger btn-lg px-4 fw-bold">
             Cerrar Sesión
         </a>
@@ -22,10 +21,11 @@
 
     <div class="card mb-5 border-0 shadow-sm rounded-4 overflow-hidden">
         <div class="card-header text-white p-4" style="background-color: var(--gumia-primary);">
-            <h2 class="mb-0 fw-bold">👤 Mi Perfil</h2>
+            <h2 class="mb-0 fw-bold">Mi Perfil</h2>
         </div>
         <div class="card-body p-4 bg-white">
-            <h3 class="fw-bold mb-1" style="color: var(--gumia-text);" th:text="${usuario.nombre}">[Nombre del Usuario]</h3>
+            <h3 class="fw-bold mb-1" style="color: var(--gumia-text);"
+                th:text="${usuario.nombre}">[Nombre del Usuario]</h3>
             <p class="text-muted fs-5" th:text="${usuario.email}">[Email]</p>
         </div>
     </div>
@@ -33,59 +33,81 @@
     <div class="row">
         <div class="col-md-6 mb-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3 class="fw-bold" style="color: var(--gumia-text);">📚 Mis Recetas</h3>
-
+                <h3 class="fw-bold" style="color: var(--gumia-text);">Mis Recetas</h3>
                 <a href="/receta/nueva" class="btn btn-primary btn-lg shadow-sm fw-bold px-3">
-                    ➕ Nueva Receta
+                    Nueva Receta
                 </a>
             </div>
 
             <div class="list-group shadow-sm">
-                <div th:each="receta : ${usuario.recetasPublicadas}" class="list-group-item list-group-item-action p-3">
+                <div th:each="receta : ${usuario.recetasPublicadas}"
+                     class="list-group-item list-group-item-action p-3">
+
                     <div class="d-flex w-100 justify-content-between align-items-center">
-                        <a th:href="@{/receta/{id}(id=${receta.id})}" class="h5 mb-1 text-decoration-none fw-bold"
-                           style="color: var(--gumia-primary);" th:text="${receta.titulo}">
+                        <a th:href="@{/receta/{id}(id=${receta.id})}"
+                           class="h5 mb-1 text-decoration-none fw-bold"
+                           style="color: var(--gumia-primary);"
+                           th:text="${receta.titulo}">
                             Título
                         </a>
-                        <span class="badge bg-info rounded-pill" th:text="${receta.categoria}">Cat</span>
+                        <span class="badge bg-info rounded-pill"
+                              th:text="${receta.categoria}">Cat</span>
                     </div>
-                    <p class="mb-2 text-muted small text-truncate" th:text="${receta.descripcion}">Desc</p>
 
-                    <a th:href="@{/receta/borrar/{id}(id=${receta.id})}"
-                       class="btn btn-outline-danger btn-sm"
-                       onclick="return confirm('¿Seguro que quieres borrar esta receta?');">
-                        🗑 Borrar
-                    </a>
+                    <p class="mb-2 text-muted small text-truncate"
+                       th:text="${receta.descripcion}">Desc</p>
+
+                    <div class="d-flex justify-content-end gap-2 mt-2">
+
+                        <a th:href="@{/receta/editar/{id}(id=${receta.id})}"
+                           class="btn btn-outline-primary btn-sm fw-bold"
+                           style="border-color: var(--gumia-primary); color: var(--gumia-primary);">
+                            Editar
+                        </a>
+
+                        <a th:href="@{/receta/borrar/{id}(id=${receta.id})}"
+                           class="btn btn-outline-danger btn-sm"
+                           onclick="return confirm('¿Seguro que quieres borrar esta receta?');">
+                            Borrar
+                        </a>
+                    </div>
                 </div>
 
-                <div th:if="${#lists.isEmpty(usuario.recetasPublicadas)}" class="list-group-item p-4 text-center text-muted">
+                <div th:if="${#lists.isEmpty(usuario.recetasPublicadas)}"
+                     class="list-group-item p-4 text-center text-muted">
                     Aún no has publicado ninguna receta. ¡Anímate!
                 </div>
             </div>
         </div>
 
         <div class="col-md-6">
-            <h3 class="fw-bold mb-3" style="color: var(--gumia-text);">❤️ Mis Favoritos</h3>
+            <h3 class="fw-bold mb-3" style="color: var(--gumia-text);">Mis Favoritos</h3>
 
             <div class="list-group shadow-sm">
-                <div th:each="fav : ${usuario.favoritos}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-3">
-                    <a th:href="@{/receta/{id}(id=${fav.id})}" class="text-decoration-none fw-bold fs-5"
-                       style="color: var(--gumia-body-text);" th:text="${fav.titulo}">
+                <div th:each="fav : ${usuario.favoritos}"
+                     class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-3">
+
+                    <a th:href="@{/receta/{id}(id=${fav.id})}"
+                       class="text-decoration-none fw-bold fs-5"
+                       style="color: var(--gumia-body-text);"
+                       th:text="${fav.titulo}">
                         Título
                     </a>
 
-                    <a th:href="@{/favoritos/remove/{id}(id=${fav.id})}" class="btn btn-sm btn-outline-secondary border-0" title="Quitar de favoritos">
-                        ❌
+                    <a th:href="@{/favoritos/remove/{id}(id=${fav.id})}"
+                       class="btn btn-sm btn-outline-secondary border-0"
+                       title="Quitar de favoritos">
+                        X
                     </a>
                 </div>
 
-                <div th:if="${#lists.isEmpty(usuario.favoritos)}" class="list-group-item p-4 text-center text-muted">
+                <div th:if="${#lists.isEmpty(usuario.favoritos)}"
+                     class="list-group-item p-4 text-center text-muted">
                     No tienes recetas favoritas guardadas.
                 </div>
             </div>
         </div>
     </div>
-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
